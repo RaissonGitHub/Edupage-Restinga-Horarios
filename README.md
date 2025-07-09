@@ -157,7 +157,7 @@ Horários organizados por turma e dia da semana:
 ## 💡 Observações Técnicas
 O acesso à API exige forçar conexões via IPv4, não consegui fazer comunicação de outra forma.
 
-Por algum motivo a API retorna os dias da semana em formato binário (ex: '10000' representa segunda-feira).
+Por algum motivo a API retorna os dias da semana em formato binário (ex: '10000' representa segunda-feira), foi necessário corrigir isso no código.
 
 Os cards representam as instâncias físicas das aulas (em dias, horários e salas), e são cruzados com lessons, teachers, subjects, etc.
 

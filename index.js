@@ -7,6 +7,8 @@ const {
   turmas,
   salasDeAula,
   horarioTurmas,
+  horarioProfessores,
+  horarioSalasDeAula
 } = await fetchHorarioTurmas();
 
 const turma = horarioTurmas.find(t => t.nome.includes('ADS'));

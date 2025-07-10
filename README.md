@@ -31,6 +31,8 @@ const {
   turmas,
   salasDeAula,
   horarioTurmas,
+  horarioProfessores,
+  horarioSalasDeAula
 } = await fetchHorarioTurmas();
 
 ```
@@ -150,6 +152,80 @@ Horários organizados por turma e dia da semana:
       "qui": { ... },
       "sex": { ... }
     }
+  }
+]
+```
+
+### `horarioProfessores`
+Lista organizada de professores e todas as aulas atribuídas a cada um deles, incluindo o dia da semana, disciplina, turmas, salas e horários:
+```
+[
+  {
+    "id": "*5",
+    "nome": "*André Estrela",
+    "aulas": [
+      {
+        "cardId": "*12",
+        "dia": "qua",
+        "periodoCard": "9",
+        "disciplina": {
+          "id": "*220",
+          "nome": "Projeto integrador I"
+        },
+        "turmas": [
+          {
+            "id": "*41",
+            "nome": "SUB e CONC - INFORMÁTICA - 2"
+          }
+        ],
+        "salas": [
+          {
+            "id": "-35",
+            "name": "509 [Lab Idiomas]",
+            "short": "509 [Lab Idiomas]"
+          }
+        ],
+        "horarios": [
+          "15:10 - 16:00"
+        ]
+      }
+    ]
+  }
+]
+```
+### `horarioSalasDeAula`
+Lista organizada por sala, com todas as aulas que ocorrem em cada local, incluindo professores, turmas, disciplinas e horários:
+```
+[
+  {
+    "id": "-35",
+    "nome": "509 [Lab Idiomas]",
+    "aulas": [
+      {
+        "cardId": "*12",
+        "dia": "qua",
+        "periodoCard": "9",
+        "disciplina": {
+          "id": "*220",
+          "nome": "Projeto integrador I"
+        },
+        "professores": [
+          {
+            "id": "*10",
+            "nome": "Bruno Canal"
+          }
+        ],
+        "turmas": [
+          {
+            "id": "*41",
+            "nome": "SUB e CONC - INFORMÁTICA - 2"
+          }
+        ],
+        "horarios": [
+          "15:10 - 16:00"
+        ]
+      }
+    ]
   }
 ]
 ```

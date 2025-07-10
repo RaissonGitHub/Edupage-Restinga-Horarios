@@ -102,6 +102,94 @@ export async function fetchHorarioTurmas() {
     return { id: turma.id, nome: turma.name, dias };
   });
 
+  const horarioProfessores = professores.map((professor) => {
+    const aulasDoProfessor = lessons.filter((l) =>
+      l.teacherids?.includes(professor.id),
+    );
+    const aulasDetalhes = [];
+
+    aulasDoProfessor.forEach((aula) => {
+      const cardsDaAula = cards.filter((c) => c.lessonid === aula.id);
+      const disciplina = disciplinas.find((d) => d.id === aula.subjectid);
+      const turmasDaAula = turmas.filter((t) => aula.classids?.includes(t.id));
+      const duracao = aula.durationperiods;
+
+      cardsDaAula.forEach((card) => {
+        const dia = diasMap[card.days];
+        if (!dia) return;
+
+        const inicio = parseInt(card.period, 10) - 1;
+        const horarios = periodos
+          .slice(inicio, inicio + duracao)
+          .map(({ starttime, endtime }) => `${starttime} - ${endtime}`);
+
+        const salas = card.classroomids.map((id) =>
+          salasDeAula.find((s) => s.id === id),
+        );
+
+        aulasDetalhes.push({
+          cardId: card.id,
+          dia: dia,
+          periodoCard: card.period,
+          disciplina: disciplina ? { id: disciplina.id, nome: disciplina.name } : null,
+          turmas: turmasDaAula.map(t => ({ id: t.id, nome: t.name })),
+          salas: salas,
+          horarios: horarios,
+        });
+      });
+    });
+    return {
+      id: professor.id,
+      nome: professor.name,
+      aulas: aulasDetalhes,
+    };
+  });
+
+  const horarioSalasDeAula = salasDeAula.map((sala) => {
+    const aulasNaSala = [];
+
+    cards.forEach((card) => {
+      if (card.classroomids?.includes(sala.id)) {
+        const aulaAssociada = lessons.find((l) => l.id === card.lessonid);
+
+        if (aulaAssociada) {
+          const disciplina = disciplinas.find((d) => d.id === aulaAssociada.subjectid);
+          const profs = professores.filter((p) =>
+            aulaAssociada.teacherids.includes(p.id),
+          );
+          const turmasDaAula = turmas.filter((t) =>
+            aulaAssociada.classids?.includes(t.id),
+          );
+          const duracao = aulaAssociada.durationperiods;
+
+          const dia = diasMap[card.days];
+          if (!dia) return;
+
+          const inicio = parseInt(card.period, 10) - 1;
+          const horarios = periodos
+            .slice(inicio, inicio + duracao)
+            .map(({ starttime, endtime }) => `${starttime} - ${endtime}`);
+
+          aulasNaSala.push({
+            cardId: card.id,
+            dia: dia,
+            periodoCard: card.period,
+            disciplina: disciplina ? { id: disciplina.id, nome: disciplina.name } : null,
+            professores: profs.map((p) => ({ id: p.id, nome: p.name })),
+            turmas: turmasDaAula.map((t) => ({ id: t.id, nome: t.name })),
+            horarios: horarios,
+          });
+        }
+      }
+    });
+
+    return {
+      id: sala.id,
+      nome: sala.name,
+      aulas: aulasNaSala,
+    };
+  });
+
   return {
     periodos,
     disciplinas,
@@ -109,5 +197,7 @@ export async function fetchHorarioTurmas() {
     turmas,
     salasDeAula,
     horarioTurmas,
+    horarioProfessores,
+    horarioSalasDeAula
   };
 }
